@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      Publish_Directory: publish
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,9 +24,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
-    - name: Publish
-      run: dotnet publish
 
     - name: Install Versionize
       run: dotnet tool install --global Versionize
@@ -41,6 +41,17 @@ jobs:
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
+
+    - name: Publish
+      if: steps.versionize.outcome == 'success'
+      run: dotnet publish --output $env:Publish_Directory
+
+    - name: Upload build artifacts
+      if: steps.versionize.outcome == 'success'
+      uses: actions/upload-artifact@v3
+      with:
+        name: MSIX Package
+        path: ${{ env.Publish_Directory }}
         
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
