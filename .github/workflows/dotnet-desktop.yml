@@ -78,7 +78,6 @@ jobs:
           }
 
     - name: Upload build artifacts
-      if: steps.versionize.outcome == 'success'
       uses: actions/upload-artifact@v3
       with:
         name: Publish Artifact
