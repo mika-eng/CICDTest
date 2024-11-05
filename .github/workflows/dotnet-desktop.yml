@@ -45,13 +45,6 @@ jobs:
     - name: Publish
       if: steps.versionize.outcome == 'success'
       run: dotnet publish WpfApp1 --output $env:Publish_Directory
-
-    - name: Upload build artifacts
-      if: steps.versionize.outcome == 'success'
-      uses: actions/upload-artifact@v3
-      with:
-        name: MSIX Package
-        path: ${{ env.Publish_Directory }}
         
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
@@ -83,3 +76,10 @@ jobs:
           } catch (error) {
             core.setFailed(error.message);
           }
+
+    - name: Upload build artifacts
+      if: steps.versionize.outcome == 'success'
+      uses: actions/upload-artifact@v3
+      with:
+        name: Publish Artifact
+        path: ${{ env.Publish_Directory }}
