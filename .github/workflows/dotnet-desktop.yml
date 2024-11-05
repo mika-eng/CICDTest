@@ -73,14 +73,6 @@ jobs:
               repo: context.repo.repo,
               tag_name: current_tag,
             });
-
-            await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: "release.tar.xz",
-              release_id: ${{ fromJSON(steps.deploy.outputs.result).data.id }}
-              data: 
-            });
           } catch (error) {
             core.setFailed(error.message);
           }
