@@ -54,34 +54,9 @@ jobs:
         branch: ${{ github.ref }}
         tags: true
 
-    - name: "Create release"
-      if: steps.versionize.outcome == 'success'
-      uses: "actions/github-script@v5"
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         github-token: "${{ secrets.GITHUB_TOKEN }}"
-        script: |
-          try {
-            const tags_url = context.payload.repository.tags_url + "?per_page=1"
-            const result = await github.request(tags_url)
-            const current_tag = result.data[0].name
-            await github.rest.repos.createRelease({
-              draft: false,
-              generate_release_notes: true,
-              name: current_tag,
-              owner: context.repo.owner,
-              prerelease: false,
-              repo: context.repo.repo,
-              tag_name: current_tag,
-            });
-          } catch (error) {
-            core.setFailed(error.message);
-          }
-
-    - name: Release with Notes
-      if: steps.versionize.outcome == 'success'
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          ${{ env.Publish_Directory }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        files: ${{ env.Publish_Directory }}
