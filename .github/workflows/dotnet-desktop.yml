@@ -10,9 +10,6 @@ jobs:
   build:
     runs-on: windows-latest
 
-    env:
-      Wap_Project_Directory: your-wap-project-directory-name
-
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -25,10 +22,15 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Publish
-      run: dotnet publish #--output $env:Wap_Project_Directory
+      run: dotnet publish
 
     - name: Install Versionize
       run: dotnet tool install --global Versionize
+
+    - name: Setup git
+      run: |
+        git config --global user.email michael.kasseckert@gmx.de
+        git config --global user.name "mika-eng"
       
     - name: Versioning
       id: versionize
@@ -38,11 +40,6 @@ jobs:
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
-    
-    - name: Setup git
-      run: |
-        git config --global user.email michael.kasseckert@gmx.de
-        git config --global user.name "mika-eng"
         
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
