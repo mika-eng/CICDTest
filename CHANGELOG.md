@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.2.4"></a>
+## [1.2.4](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.2.4) (2024-11-05)
+
+### Bug Fixes
+
+* Update dotnet-desktop.yml ([a2b8442](https://www.github.com/mika-eng/CICDTest/commit/a2b8442abf7d987a1fc9e79d70f9f5a53eadebf3))
+
 <a name="1.2.3"></a>
 ## [1.2.3](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.2.3) (2024-11-05)
 
