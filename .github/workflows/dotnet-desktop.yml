@@ -35,7 +35,7 @@ jobs:
       
     - name: Versioning
       id: versionize
-      run: versionize --exit-insignificant-commits
+      run: versionize #--exit-insignificant-commits
       continue-on-error: true
     
     - name: No release required
