@@ -41,8 +41,8 @@ jobs:
     
     - name: Setup git
       run: |
-        git config --local user.email "<michael.kasseckert@gmx.de>"
-        git config --local user.name "<mika-eng>"
+        git config --global user.email michael.kasseckert@gmx.de
+        git config --global user.name "mika-eng"
         
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
