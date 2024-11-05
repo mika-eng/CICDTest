@@ -44,7 +44,7 @@ jobs:
 
     - name: Publish
       if: steps.versionize.outcome == 'success'
-      run: dotnet publish CICDTest --output $env:Publish_Directory
+      run: dotnet publish WpfApp1 --output $env:Publish_Directory
 
     - name: Upload build artifacts
       if: steps.versionize.outcome == 'success'
