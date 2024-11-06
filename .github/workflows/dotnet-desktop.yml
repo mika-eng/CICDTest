@@ -42,7 +42,7 @@ jobs:
       run: |
         # Extract the latest changelog entry by looking for the first header (##)
         # This assumes a CHANGELOG.md format where each version section starts with ##
-        latest_changelog=$(awk '/^## /{flag=1;next}/^## /{flag=0}flag' CHANGELOG.md)
+        latest_changelog=$(awk '/^### /{flag=1;next}/^### /{flag=0}flag' CHANGELOG.md)
         echo "$latest_changelog" > latest_changelog.md
 
     - name: Output Latest Changelog
