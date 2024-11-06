@@ -38,7 +38,7 @@ jobs:
       continue-on-error: true
 
     - name: Set env
-      run: versionize inspect >> $VERSION
+      run: echo "VERSION=v$(versionize inspect)" >> $GITHUB_ENV
     
     - name: Versioning inspect
       run: versionize inspect 
@@ -63,7 +63,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create v$VERSION -t "Release v$VERSION" -F CHANGELOG.md
+        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -F CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -71,7 +71,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Uploading release asset
-        gh release upload v$VERSION ./Publish/WpfApp1.exe
+        gh release upload ${{env.VERSION}} ./Publish/WpfApp1.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
