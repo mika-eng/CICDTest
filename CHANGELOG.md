@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.4.0"></a>
+## [1.4.0](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.4.0) (2024-11-06)
+
+### Features
+
+* add library project ([36f0894](https://www.github.com/mika-eng/CICDTest/commit/36f0894e17250bda51e093261983b4a2d60109cb))
+
+### Bug Fixes
+
+* add version ([89aa9c6](https://www.github.com/mika-eng/CICDTest/commit/89aa9c62c13b4eee92c45f9e09dba462d6073132))
+
 <a name="1.3.6"></a>
 ## [1.3.6](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.3.6) (2024-11-06)
 
