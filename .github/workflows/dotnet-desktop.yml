@@ -37,6 +37,18 @@ jobs:
       run: versionize #--exit-insignificant-commits
       continue-on-error: true
 
+    - name: Extract Latest Changelog Entry
+      # This extracts only the most recent changelog entry from CHANGELOG.md
+      run: |
+        # Extract the latest changelog entry by looking for the first header (##)
+        # This assumes a CHANGELOG.md format where each version section starts with ##
+        latest_changelog=$(awk '/^## /{flag=1;next}/^## /{flag=0}flag' CHANGELOG.md)
+        echo "$latest_changelog" > latest_changelog.md
+
+    - name: Output Latest Changelog
+      # Print the extracted changelog to verify
+      run: cat latest_changelog.md
+
     - name: Set env
       run: echo "VERSION=v$(versionize inspect)" >> $GITHUB_ENV
         
@@ -60,7 +72,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -n "$(awk 'NR==FNR{a[$0]++;next}!($0 in a)' CHANGELOG.md CHANGELOG_OLD.md)"
+        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -F latest_changelog.md
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
