@@ -56,11 +56,14 @@ jobs:
         branch: ${{ github.ref }}
         tags: true
 
+    - name: Set new changelog
+      run: diff CHANGELOG.md CHANGELOG_OLD.md >> CHANGELOG_NEW.md
+
     - name: Publish New Repo Release
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -n "$(diff CHANGELOG.md CHANGELOG_OLD.md)"
+        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -F CHANGELOG_NEW.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
