@@ -29,7 +29,8 @@ jobs:
 
     - name: Setup git
       run: |
-        git config --global user.name "github-bot"
+        git config --global user.email "opencommissioning@spiratec.com"
+        git config --global user.name "opencommissioning"
       
     - name: Versioning
       id: versionize
