@@ -29,8 +29,7 @@ jobs:
 
     - name: Setup git
       run: |
-        git config --global user.email michael.kasseckert@gmx.de
-        git config --global user.name "mika-eng"
+        git config --global user.name "github-bot"
       
     - name: Versioning
       id: versionize
