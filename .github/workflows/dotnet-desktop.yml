@@ -24,6 +24,9 @@ jobs:
     - name: Install Versionize
       run: dotnet tool install --global Versionize
 
+    - name: Get current changelog
+      run: cat CHANGELOG.md >> CHANGELOG_OLD.md
+
     - name: Setup git
       run: |
         git config --global user.email michael.kasseckert@gmx.de
@@ -36,10 +39,7 @@ jobs:
 
     - name: Set env
       run: echo "VERSION=v$(versionize inspect)" >> $GITHUB_ENV
-    
-    - name: Versioning inspect
-      run: versionize inspect 
-    
+        
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
@@ -47,9 +47,6 @@ jobs:
     - name: Publish
       if: steps.versionize.outcome == 'success'
       run: dotnet publish WpfApp1 --configuration release --runtime win-x64 -p:PublishSingleFile=true -p:EnableWindowsTargeting=true --self-contained false --output ./Publish
-        
-    - name: list publish
-      run: ls ./Publish
     
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
@@ -63,7 +60,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -F CHANGELOG.md
+        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -n "$(diff CHANGELOG.md CHANGELOG_OLD.md)"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
