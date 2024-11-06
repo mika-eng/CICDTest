@@ -60,7 +60,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create $GITHUB_ENV -t "Release $GITHUB_ENV" -F CHANGELOG.md
+        gh release create v$GITHUB_ENV -t "Release v$GITHUB_ENV" -F CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -68,7 +68,7 @@ jobs:
       if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         echo Uploading release asset
-        gh release upload $GITHUB_ENV ./Publish/WpfApp1.exe
+        gh release upload v$GITHUB_ENV ./Publish/WpfApp1.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
