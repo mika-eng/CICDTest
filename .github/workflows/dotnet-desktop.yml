@@ -60,7 +60,8 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -n "$(diff -w CHANGELOG.md CHANGELOG_OLD.md)"
+        gh release create ${{env.VERSION}} -t "Release ${{env.VERSION}}" -n "$(awk 'NR==FNR{a[$0]++;next}!($0 in a)' CHANGELOG.md CHANGELOG_OLD.md)"
+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
