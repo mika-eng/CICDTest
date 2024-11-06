@@ -1,6 +1,5 @@
 name: .NET Core Desktop
 
-
 on:
   push:
     branches: [ "main" ]
@@ -9,10 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-
-    env:
-      Publish_Directory: publish
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -20,10 +16,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET Core
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Install Versionize
       run: dotnet tool install --global Versionize
@@ -38,13 +34,16 @@ jobs:
       run: versionize #--exit-insignificant-commits
       continue-on-error: true
     
+    - name: Versioning inspect
+      run: inspect 
+    
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
 
     - name: Publish
       if: steps.versionize.outcome == 'success'
-      run: dotnet publish WpfApp1 --output $env:Publish_Directory
+      run: dotnet publish WpfApp1 -p:EnableWindowsTargeting=true --output ./Publish
         
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
@@ -54,36 +53,19 @@ jobs:
         branch: ${{ github.ref }}
         tags: true
 
-    - name: "Create release"
-      id: create_release
+    - name: Publish New Repo Release
       if: steps.versionize.outcome == 'success'
-      uses: "actions/github-script@v5"
-      with:
-        github-token: "${{ secrets.GITHUB_TOKEN }}"
-        script: |
-          try {
-            const tags_url = context.payload.repository.tags_url + "?per_page=1"
-            const result = await github.request(tags_url)
-            const current_tag = result.data[0].name
-            await github.rest.repos.createRelease({
-              draft: false,
-              generate_release_notes: true,
-              name: current_tag,
-              owner: context.repo.owner,
-              prerelease: false,
-              repo: context.repo.repo,
-              tag_name: current_tag,
-            });
-          } catch (error) {
-            core.setFailed(error.message);
-          }
-
-    - name: upload windows artifact
-      uses: actions/upload-release-asset@v1
+      run: |
+        echo Creating Repo Release
+        gh release create v${{steps.semantic.outputs.new_release_version}} -t "Release ${{steps.semantic.outputs.new_release_version}}" -F CHANGELOG.md
       env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.Publish_Directory }}\WpfApp1.deps.json
-        asset_name: WpfApp1.deps.json
-        asset_content_type: application/json
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Artifact
+      if: steps.semantic.outputs.new_release_published == 'true'
+      run: |
+        echo Uploading release asset
+        gh release upload v${{ steps.semantic.outputs.new_release_version }} ./Publish/WpfApp1.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
