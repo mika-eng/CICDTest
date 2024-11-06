@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.3.4"></a>
+## [1.3.4](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.3.4) (2024-11-06)
+
+### Bug Fixes
+
+* GEIL ([69e3c0a](https://www.github.com/mika-eng/CICDTest/commit/69e3c0a15ec6303180af9d1583b71c84ca8f8207))
+
 <a name="1.3.3"></a>
 ## [1.3.3](https://www.github.com/mika-eng/CICDTest/releases/tag/v1.3.3) (2024-11-06)
 
