@@ -33,6 +33,9 @@ jobs:
       id: versionize
       run: versionize #--exit-insignificant-commits
       continue-on-error: true
+
+    - name: Set env
+      run: echo "GITHUB_ENV=$(versionize inspect)" >> $GITHUB_ENV
     
     - name: Versioning inspect
       run: versionize inspect 
@@ -57,7 +60,7 @@ jobs:
       if: steps.versionize.outcome == 'success'
       run: |
         echo Creating Repo Release
-        gh release create v${{steps.semantic.outputs.new_release_version}} -t "Release ${{steps.semantic.outputs.new_release_version}}" -F CHANGELOG.md
+        gh release create $GITHUB_ENV -t "Release $GITHUB_ENV" -F CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -65,7 +68,7 @@ jobs:
       if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         echo Uploading release asset
-        gh release upload v${{ steps.semantic.outputs.new_release_version }} ./Publish/WpfApp1.exe
+        gh release upload $GITHUB_ENV ./Publish/WpfApp1.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
