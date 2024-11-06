@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  VERSION: v1.0.0
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,8 +46,11 @@ jobs:
 
     - name: Publish
       if: steps.versionize.outcome == 'success'
-      run: dotnet publish WpfApp1 -p:EnableWindowsTargeting=true --output ./Publish
+      run: dotnet publish WpfApp1 --configuration release --runtime win-x64 -p:PublishSingleFile=true -p:EnableWindowsTargeting=true --self-contained false --output ./Publish
         
+    - name: list publish
+      run: ls ./Publish
+    
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
       uses: ad-m/github-push-action@master
