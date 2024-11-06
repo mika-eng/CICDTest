@@ -35,7 +35,7 @@ jobs:
       continue-on-error: true
     
     - name: Versioning inspect
-      run: inspect 
+      run: versionize inspect 
     
     - name: No release required
       if: steps.versionize.outcome != 'success'
